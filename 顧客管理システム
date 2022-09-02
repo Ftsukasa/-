@@ -1,0 +1,116 @@
+"""
+Python tkinter の練習
+「商品入札システム」
+
+メイン
+
+"""
+
+import tkinter as tk
+import tkinter.ttk as ttk
+from tkinter import messagebox as mb
+
+def btn_delete():#当ボタンでオールリセット
+    ent_name.delete(0, tk.END);ent_kakaku.delete(0, tk.END);combo_tiki.current(0)
+    seibetsu.set(3);doui.set(2)
+
+
+def btn_touroku():
+    ac=doui.get()#同意
+    se=seibetsu.get()#性別
+    if ac!=0:
+        mb.showwarning("登録エラー","同意「する」にチェックを入れてください")
+    elif se==3:
+        mb.showwarning("登録エラー","性別を選択してください")
+    elif ent_name.get()=="":
+        mb.showwarning("登録エラー","名前を入力してください")
+    elif ent_kakaku.get()=="":
+        mb.showwarning("登録エラー","希望価格を入力してください")
+    else:
+        se=seibetsu.get()#ラジオボタン「性別」から0(男性)or1(女性)wを取り出し
+        if se==0:#「se」が0ならば男性
+            se="男性"
+        elif se==1:#「se」が1ならば女性
+            se="女性"
+        elif se==2:#「se」が2ならば選択しない
+            se="選択しない"
+        
+        #同意(「同意　しない」にしても列21ではじかれるので強制的に「同意　する」に設定)
+        ac="する"
+
+        #登録情報の確認メッセ
+        ans=mb.askyesno("確認","以下の内容で登録しますか？\n"+"名前："+ent_name.get()+"\n"+"性別："+se+"\n"+
+        "地域："+combo_tiki.get()+"\n"+"希望価格："+ent_kakaku.get()+"\n"+"同意：する"
+        )
+        if ans==True:#直上のメッセが「はい」で「list.txt」に追加書き込み
+            d=(ent_name.get()+","+se+","+combo_tiki.get()+","+ent_kakaku.get()+","+ac+"\n")
+            f1=open("list.txt","a")
+            f1.write(d)
+            f1.close
+        
+            mb.showinfo("登録OK","登録しました")#このメッセを閉じたらオールリセット
+            ent_name.delete(0, tk.END);ent_kakaku.delete(0, tk.END);combo_tiki.current(0)
+            seibetsu.set(3);doui.set(2)
+        
+            
+
+
+            
+root=tk.Tk()
+root.title("商品入札システム")
+root.geometry("350x300")
+root.resizable(width=False, height=False)
+
+la1=tk.Label(root,text="商品入札登録",width=10,bg="white")
+la1.pack()
+
+la_name=tk.Label(root,text="名前",width=7)
+la_name.place(x=30,y=50)
+ent_name=tk.Entry(root,width=20)
+ent_name.place(x=100,y=50)
+
+la_seibetsu=tk.Label(root,text="性別",width=7)
+la_seibetsu.place(x=30,y=80)
+
+seibetsu=tk.IntVar()
+ldoM=tk.Radiobutton(root,text="男性",variable=seibetsu,value=0)
+ldoF=tk.Radiobutton(root,text="女性",variable=seibetsu,value=1)
+ldoNone=tk.Radiobutton(root,text="選択しない",variable=seibetsu,value=2)
+ldoM.place(x=100,y=80);ldoF.place(x=150,y=80);ldoNone.place(x=200,y=80)
+seibetsu.set(3)
+
+la_tiki=tk.Label(root,text="地域",width=7)
+la_tiki.place(x=30,y=110)
+
+value_tiki=("愛知","三重","岐阜","静岡")
+combo_tiki=ttk.Combobox(root,width=20,value=value_tiki,state="readonly")
+combo_tiki.place(x=100,y=110);combo_tiki.current(0)
+
+la_kakaku=tk.Label(root,text="希望価格",width=7)
+la_kakaku.place(x=30,y=140)
+ent_kakaku=tk.Entry(root,width=20)
+ent_kakaku.place(x=100,y=140)
+la_en=tk.Label(root,text="円")
+la_en.place(x=230,y=140)
+
+la_doui=tk.Label(root,text="同意する",width=7)
+la_doui.place(x=30,y=170)
+
+doui=tk.IntVar()
+ldoYes=tk.Radiobutton(root,text="する",variable=doui,value=0)
+ldoNo=tk.Radiobutton(root,text="しない",variable=doui,value=1)
+ldoYes.place(x=100,y=170);ldoNo.place(x=150,y=170);doui.set(2)
+
+btn_touroku=tk.Button(root,text="登録する",width=20,bg="darkgray",command=btn_touroku)
+btn_touroku.place(x=20,y=200)
+
+btn_delete=tk.Button(root,text="リセット",bg="yellow",command=btn_delete)
+btn_delete.pack(side=tk.BOTTOM,fill="x")
+
+
+
+
+
+
+root.mainloop()
+
