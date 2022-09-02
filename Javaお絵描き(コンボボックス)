@@ -1,0 +1,122 @@
+//お絵描き　コンボボックス
+
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+class MouseEv_Ensyu4 extends JFrame implements ActionListener{
+
+	Button b5;
+
+	
+	JComboBox combo;
+	String[] combodata = {"赤", "青", "緑", "黒"};
+	String cc="";
+
+	Panel p1;
+
+	int x,y;
+	
+	Canvas c;
+	Close cl;
+	
+	int ans=0;
+	Graphics g;
+	
+	
+	class Mev extends MouseMotionAdapter{
+		public void mouseDragged(MouseEvent e){
+			cc=(String)combo.getSelectedItem();
+			
+			
+			g=c.getGraphics();
+			g.drawLine(x,y,e.getX(),e.getY());
+			
+			if(cc=="赤"){				
+				g.setColor(Color.red);
+				g.drawLine(x,y,e.getX(),e.getY());}
+			if(cc=="青"){				
+				g.setColor(Color.blue);
+				g.drawLine(x,y,e.getX(),e.getY());}
+			if(cc=="緑"){				
+				g.setColor(Color.green);
+				g.drawLine(x,y,e.getX(),e.getY());}
+			if(cc=="黒"){				
+				g.setColor(Color.black);
+				g.drawLine(x,y,e.getX(),e.getY());}
+
+			x=e.getX();
+			y=e.getY();
+			
+			//System.out.println(x+"と"+y);
+		}
+	}
+
+	class Mev2 extends MouseAdapter{
+		public void mousePressed(MouseEvent e){
+			x=e.getX();
+			y=e.getY();
+
+			
+		}
+	}
+
+	MouseEv_Ensyu4(){
+		setSize(400,400);
+		setTitle("演習問題１");
+		
+
+		b5=new Button("消去");b5.setBackground(Color.gray);b5.setForeground(Color.white);
+	
+
+		
+		combo=new JComboBox(combodata);
+
+		//パネル
+		p1=new Panel();
+		p1.setLayout(new GridLayout(1,4));
+		//p1.add(b1);p1.add(b2);p1.add(b3);p1.add(b4);
+		p1.add(combo);
+		p1.add(b5);
+
+		setLayout(new BorderLayout());
+		add("South",p1);
+
+
+		b5.addActionListener(this);
+
+		c=new Canvas();
+		c.setBackground(Color.white);
+		add(c);
+
+		Mev a;
+		a=new Mev();
+
+		Mev2 b;
+		b=new Mev2();
+
+		c.addMouseMotionListener(a);
+		c.addMouseListener(b);
+
+		cl=new Close();
+		addWindowListener(cl);
+	}
+
+	public static void main(String args[]){
+		new MouseEv_Ensyu4().setVisible(true);
+	}
+
+	class Close extends WindowAdapter{
+		public void windowClosing(WindowEvent e){
+			System.exit(0);
+		}
+	}
+
+	public void actionPerformed(ActionEvent e){
+	
+		if(e.getSource()==b5){
+			g.clearRect(0,0,400,400);
+		}
+		
+	}
+}
