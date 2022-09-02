@@ -1,0 +1,160 @@
+"""
+Python 練習 問題1
+tkウィンドウを3つ作成
+root=初期画面(MENU)
+root2=商品登録画面
+root3=商品検索画面
+"""
+
+import tkinter as tk
+import tkinter.ttk as ttk
+from tkinter import messagebox as mb
+
+
+
+#MENU画面のボタン「登録」に対する処理
+def btn_touroku():
+    def btn_t():#商品登録画面内のボタン「登録する」に対する処理
+        syoname=ent_syoname.get()
+        bunrui=combo.get()
+        tanka=ent_tanka.get()
+        d1=(syoname+","+bunrui+","+tanka+"\n")
+        if syoname=="" or tanka=="":
+            mb.showwarning("入力エラー","未入力があります")
+        else:
+            f1=open("item.txt","a")
+            f1.write(d1)
+            f1.close
+            mb.showinfo("登録OK","登録しました")
+            ent_syoname.delete(0, tk.END)
+            combo.current(0)
+            ent_tanka.delete(0,tk.END)
+            result=mb.askyesno("登録","登録を続けますか？")
+            if result==False:
+                root2.destroy()
+            
+    #商品登録画面  
+    root2=tk.Tk()
+    root2.title("商品登録")
+    root2.geometry("300x200")
+    root2.resizable(width=False, height=False)
+    root.configure(bg="white")
+                   
+    la_syotou=tk.Label(root2,text="商品登録",width=10)
+    la_syotou.pack()
+
+    la_syoname=tk.Label(root2,text="商品名",width=7)
+    la_syoname.place(x=50,y=50)
+    ent_syoname=tk.Entry(root2,width=20)
+    ent_syoname.place(x=100,y=50)
+
+    la_bunrui=tk.Label(root2,text="分類",width=7)
+    la_bunrui.place(x=50,y=80)
+    date_bunrui=("野菜","果物","肉・魚")
+    combo=ttk.Combobox(root2,width=20,state="readonly",value=date_bunrui)
+    combo.place(x=100,y=80);combo.current(0)
+
+    la_tanka=tk.Label(root2,text="単価",width=7)
+    la_tanka.place(x=50,y=110)
+    ent_tanka=tk.Entry(root2,width=20)
+    ent_tanka.place(x=100,y=110)
+
+    btn_t=tk.Button(root2,text="登録する",width=10,bg="darkgray",command=btn_t)
+    btn_t.place(x=100,y=140)
+
+def btn_kensaku():#menu画面のボタン「検索」に対する処理
+    datelist=[]
+    f2=open("item.txt","r")
+    date=f2.readlines()
+    for read1 in date:
+        b=read1.split(",")
+        datelist.append(b)
+    f2.close
+
+    def btn_kensaku1():
+        s=combo1.get()
+        for ab in range(0,len(datelist)):
+            if s in datelist[ab]:  
+                la_bunrui3a["text"]=datelist[ab][1].replace("\n","");la_tanka3a["text"]=datelist[ab][2].replace("\n","")
+
+                if la_bunrui3a["text"]=="野菜":
+                    la_bunrui3a["bg"]="lightgreen";la_bunrui3a["fg"]="black"
+
+                if la_bunrui3a["text"]=="果物":
+                    la_bunrui3a["bg"]="orange";la_bunrui3a["fg"]="black"
+
+                if la_bunrui3a["text"]=="肉・魚":
+                    la_bunrui3a["bg"]="red";la_bunrui3a["fg"]="white"
+                    
+                
+    def btn5():
+        la_bunrui3a["text"]=""
+        la_bunrui3a["bg"]="white"
+        
+        la_tanka3a["text"]=""
+        
+        combo1.current(0)
+        
+        
+        
+    #商品検索画面
+    
+
+    root3=tk.Tk()
+    root3.title("商品検索")
+    root3.geometry("300x200")
+    root3.resizable(width=False, height=False)
+    #root3.configure(bg="white")
+
+    la_syoken=tk.Label(root3,text="商品検索",width=10,bg="white")
+    la_syoken.pack()
+
+    la_syoname1=tk.Label(root3,text="商品名",width=7,bg="white")
+    la_syoname1.place(x=50,y=50)
+
+    
+    combo1=ttk.Combobox(root3,width=20,state="readonly")
+    combo1.place(x=100,y=50)
+    
+    datelist2=[]
+    for c in range(len(datelist)):
+        datelist2.append(datelist[c][0])
+    combo1["value"]=(datelist2);combo1.current(0)
+    
+
+    btn_kensaku1=tk.Button(root3,text="検索する",width=10,bg="darkgray",command=btn_kensaku1)
+    btn_kensaku1.place(x=50,y=80)
+
+    la_bunrui3=tk.Label(root3,text="分類",width=7,bg="white")
+    la_bunrui3.place(x=50,y=130)
+    la_bunrui3a=tk.Label(root3,width=20,bg="white")
+    la_bunrui3a.place(x=100,y=130)
+
+    la_tanka3=tk.Label(root3,text="単価",width=7,bg="white")
+    la_tanka3.place(x=50,y=160)
+    la_tanka3a=tk.Label(root3,width=20,bg="white")
+    la_tanka3a.place(x=100,y=160)
+
+    btn5=tk.Button(root3,text="リセット",bg="yellow",width=7,command=btn5)
+    btn5.place(x=250,y=30)
+
+
+
+#初期(MENU)画面
+root=tk.Tk()
+root.title("問題1")
+root.geometry("200x150")
+root.resizable(width=False, height=False)
+root.configure(bg="white")
+
+la_menu=tk.Label(root,text="MENU",width=10,bg="white")
+la_menu.pack()
+
+btn_touroku=tk.Button(root,text="登録",width=10,bg="darkgray",command=btn_touroku)
+btn_touroku.pack(pady=10,)
+btn_kensaku=tk.Button(root,text="検索",width=10,bg="darkgray",command=btn_kensaku)
+btn_kensaku.pack(pady=10,)
+
+
+
+root.mainloop()
