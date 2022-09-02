@@ -1,0 +1,122 @@
+//お絵描き　ラジオボタン
+
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+class MouseEv_Ensyu3 extends JFrame implements ActionListener{
+	JRadioButton b1,b2,b3,b4;Button b5;
+	ButtonGroup bgroup;
+	
+	Panel p1;
+
+	int x,y;
+	
+	Canvas c;
+	Close cl;
+	
+	int ans=0;
+	Graphics g;
+	
+	
+	class Mev extends MouseMotionAdapter{
+		public void mouseDragged(MouseEvent e){
+			
+			
+			
+			g=c.getGraphics();
+			g.drawLine(x,y,e.getX(),e.getY());
+			
+			if(ans==1){				
+				g.setColor(Color.red);
+				g.drawLine(x,y,e.getX(),e.getY());}
+			if(ans==2){				
+				g.setColor(Color.blue);
+				g.drawLine(x,y,e.getX(),e.getY());}
+			if(ans==3){				
+				g.setColor(Color.green);
+				g.drawLine(x,y,e.getX(),e.getY());}
+			if(ans==4){				
+				g.setColor(Color.black);
+				g.drawLine(x,y,e.getX(),e.getY());}
+
+			x=e.getX();
+			y=e.getY();
+			
+			//System.out.println(x+"と"+y);
+		}
+	}
+
+	class Mev2 extends MouseAdapter{
+		public void mousePressed(MouseEvent e){
+			x=e.getX();
+			y=e.getY();
+
+			
+		}
+	}
+
+	MouseEv_Ensyu3(){
+		setSize(400,400);
+		setTitle("演習問題１");
+		
+		//ボタン
+		b1=new JRadioButton("");b1.setBackground(Color.red);b1.setForeground(Color.white);
+		b2=new JRadioButton("");b2.setBackground(Color.blue);b2.setForeground(Color.white);
+		b3=new JRadioButton("");b3.setBackground(Color.green);
+		b4=new JRadioButton("");b4.setBackground(Color.black);b4.setForeground(Color.white);
+		b5=new Button("消去");b5.setBackground(Color.gray);
+
+		bgroup=new ButtonGroup();
+		bgroup.add(b1);bgroup.add(b2);bgroup.add(b3);bgroup.add(b4);
+
+		//パネル
+		p1=new Panel();
+		p1.setLayout(new GridLayout(1,4));
+		p1.add(b1);p1.add(b2);p1.add(b3);p1.add(b4);p1.add(b5);
+
+		setLayout(new BorderLayout());
+		add("South",p1);
+	
+		b1.addActionListener(this);b2.addActionListener(this);
+		b3.addActionListener(this);b4.addActionListener(this);
+		b5.addActionListener(this);
+
+		c=new Canvas();
+		c.setBackground(Color.white);
+		add(c);
+
+		Mev a;
+		a=new Mev();
+
+		Mev2 b;
+		b=new Mev2();
+
+		c.addMouseMotionListener(a);
+		c.addMouseListener(b);
+
+		cl=new Close();
+		addWindowListener(cl);
+	}
+
+	public static void main(String args[]){
+		new MouseEv_Ensyu3().setVisible(true);
+	}
+
+	class Close extends WindowAdapter{
+		public void windowClosing(WindowEvent e){
+			System.exit(0);
+		}
+	}
+
+	public void actionPerformed(ActionEvent e){
+		if(e.getSource()==b1){ans=1;}
+		if(e.getSource()==b2){ans=2;}
+		if(e.getSource()==b3){ans=3;}
+		if(e.getSource()==b4){ans=4;}
+		if(e.getSource()==b5){
+			g.clearRect(0,0,400,400);
+		}
+		
+	}
+}
